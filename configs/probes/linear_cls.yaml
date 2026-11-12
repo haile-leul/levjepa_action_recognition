@@ -1,0 +1,12 @@
+# Baseline 1: linear classifier on the CLS token.
+dataset: ucf101
+feature: cls
+head: linear
+head_kwargs: {}
+
+epochs: 50
+batch_size: 256
+optimizer: adamw
+weight_decay: 0.0
+lrs: [1.0e-4, 3.0e-4, 1.0e-3, 3.0e-3]   # every lr is one run / one row in results.csv
+seed: 0

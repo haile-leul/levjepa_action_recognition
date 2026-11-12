@@ -1,0 +1,26 @@
+# LeVJEPA-VideoMix-Large: ViT-L/16, 303M params, 16 frames at 224 px.
+# Frozen for the whole project.
+model_id: galilai-group/levjepa-videomix-large
+
+num_frames: 16
+image_size: 224
+patch_size: 16
+tubelet_size: 1          # 16 frames -> 16 temporal positions -> 16 x 14 x 14 patch tokens
+embed_dim: 1024
+
+# Layout the HF model expects for its input. Our data pipeline always produces
+# (B, T, C, H, W); the backbone wrapper permutes if needed.
+# Sprint 3: confirm this (and mean/std below) against the model card.
+input_layout: BCTHW
+
+# float32 is the safe default. bfloat16 roughly halves memory and is fine for
+# feature extraction on recent GPUs.
+dtype: float32
+
+# Pixel normalisation applied in src/data/video.py (ImageNet statistics).
+mean: [0.485, 0.456, 0.406]
+std: [0.229, 0.224, 0.225]
+
+# There is intentionally no attn_mode here. The checkpoint was trained with
+# block-causal attention and that is the default; full attention runs without
+# errors but gives worse features. Leave it alone.

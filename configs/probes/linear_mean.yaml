@@ -1,0 +1,13 @@
+# Baseline 2: linear classifier on the mean of all patch tokens.
+# Everything except `feature` must match linear_cls.yaml.
+dataset: ucf101
+feature: mean
+head: linear
+head_kwargs: {}
+
+epochs: 50
+batch_size: 256
+optimizer: adamw
+weight_decay: 0.0
+lrs: [1.0e-4, 3.0e-4, 1.0e-3, 3.0e-3]
+seed: 0
