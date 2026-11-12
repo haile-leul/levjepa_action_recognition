@@ -1,0 +1,10 @@
+[project]
+name = "levjepa-action-recognition"
+version = "0.1.0"
+description = "Action recognition with a frozen LeVJEPA video encoder: comparing readout strategies"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "tests"]
+addopts = "-q"

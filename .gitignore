@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Environments
+.venv/
+venv/
+env/
+.env
+
+# Data, cached features and checkpoints never go in git
+/data/
+/features/
+/checkpoints/
+*.pt
+*.pth
+*.npy
+*.npz
+*.avi
+*.mp4
+*.webm
+
+# Experiment trackers / logs
+wandb/
+/runs/
+/logs/
+*.log
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store

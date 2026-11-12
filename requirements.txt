@@ -1,0 +1,8 @@
+torch>=2.2
+transformers>=4.46
+huggingface_hub
+numpy
+pyyaml
+tqdm
+av>=12        # video decoding (PyAV, ships its own ffmpeg)
+pytest
