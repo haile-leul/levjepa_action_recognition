@@ -1,0 +1,1 @@
+date,git_commit,dataset,feature,head,lr,weight_decay,epochs,batch_size,seed,top1,top5,trainable_params,peak_gpu_mem_mb,train_time_s,config,notes
