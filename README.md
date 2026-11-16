@@ -42,9 +42,11 @@ configs/
 docs/
     model_notes.md          what goes into the model, what comes out, what to verify
     reading_list.md
+    notes/                  your reading notes, one file per paper
 results/
     results.csv             every training run, one row each
 scripts/
+    check_env.py            check packages and GPU                       (works now)
     check_model.py          load the model and inspect its outputs       (works now)
     extract_features.py     run the backbone once, cache features        (sprint 4)
     train_probe.py          train a head on cached features, log result  (sprint 5)
@@ -72,10 +74,11 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Check that everything is in place (CPU only, takes a few seconds):
+Check that everything is in place. Neither command downloads the model:
 
 ```bash
-pytest
+python scripts/check_env.py    # package versions and the GPU(s) PyTorch sees
+pytest                         # CPU tests, a few seconds
 ```
 
 ## Running the model
