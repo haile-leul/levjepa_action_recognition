@@ -2,7 +2,7 @@
 
 **Efficient action recognition via collapse-free video pretraining with LeVJEPA**
 
-Supervisors: Haileleul Zeyede Haile, Ian Blair · Nov 2026 – May 2027
+Supervisors: Haileleul Zeyede Haile, Ian Blair
 
 We take a pretrained [LeVJEPA](https://arxiv.org/abs/2608.27395) video model,
 keep it frozen, and train only small heads on top of it for action recognition.
@@ -23,12 +23,15 @@ We meet every two weeks. The task notes for each sprint are in
 [`sprints/`](sprints/). Read the one for the current sprint; you don't need to
 look ahead.
 
-| Phase | Sprints | What |
-|---|---|---|
-| Read | 1–2 (Nov) | V-JEPA, LeJEPA, LeVJEPA, then VideoMAE, V-JEPA 2 probes, SSv2 |
-| Set up | 3–5 (Dec–Jan) | Run the model, UCF101 loader, feature extraction, first baselines |
-| Experiment | 6–10 (Feb–Apr) | More readouts, SSv2, seeds, temporal analysis |
-| Write up | 11–12 (Apr–May) | Clean code, final tables, report, final talk |
+The project goes through these phases, in this order:
+
+| Phase | What |
+|---|---|
+| Read | The papers behind the model (V-JEPA, LeJEPA, LeVJEPA), then the two datasets (UCF101, SSv2) |
+| Understand the model | Run it, look inside it (attention, patch tokens), decide what to read out |
+| Baselines | UCF101 loader, feature extraction, linear probes on CLS vs mean-pooled patches |
+| Experiment | More readouts, SSv2, seeds, temporal analysis |
+| Write up | Clean code, final tables, report, final talk |
 
 Papers and links: [`docs/reading_list.md`](docs/reading_list.md).
 
@@ -40,23 +43,25 @@ configs/
     ucf101.yaml             dataset path, split, frame sampling
     probes/                 one config per readout experiment
 docs/
-    model_notes.md          what goes into the model, what comes out, what to verify
+    model_notes.md          the model, how it was trained, what it means for the readout
     reading_list.md
-    notes/                  your reading notes, one file per paper
 results/
     results.csv             every training run, one row each
+    figures/                figures you want us to see
 scripts/
     check_env.py            check packages and GPU                       (works now)
     check_model.py          load the model and inspect its outputs       (works now)
-    extract_features.py     run the backbone once, cache features        (sprint 4)
-    train_probe.py          train a head on cached features, log result  (sprint 5)
+    visualize_tokens.py     CLS attention, patch PCA, patch similarity   (partly to do)
+    extract_features.py     run the backbone once, cache features        (to do)
+    train_probe.py          train a head on cached features, log result  (to do)
 sprints/                    task notes for each two-week sprint
 src/
     models/backbone.py      frozen LeVJEPA wrapper -> CLS + patch grid
     models/heads.py         readout heads (linear for now)
     data/video.py           decode, sample 16 frames, resize, normalise
-    data/ucf101.py          UCF101 dataset                               (holiday break)
+    data/ucf101.py          UCF101 dataset                               (to do)
     data/features.py        loading cached features
+    analysis/               attention capture and plotting helpers
     utils/metrics.py        accuracy, param count, time/memory, results logging
 tests/                      run on CPU with a tiny fake model, no download needed
 ```
@@ -111,13 +116,24 @@ from src.utils.config import load_config
 cfg = load_config("configs/model.yaml")
 backbone = LeVJEPABackbone.from_config(cfg).to("cuda")
 
-clip = load_clip("clip.avi", cfg["num_frames"], cfg["image_size"], cfg["mean"], cfg["std"])
+clip = load_clip("clip.avi", cfg["num_frames"], cfg["image_size"], cfg["mean"], cfg["std"], cfg["target_fps"])
 out = backbone(clip.unsqueeze(0))     # input (B, T, C, H, W)
 out.cls                               # (1, 1024)
 out.patches                           # (1, 16, 14, 14, 1024)
 ```
 
-Two things to know about the model (more in [`docs/model_notes.md`](docs/model_notes.md)):
+## Looking inside the model
+
+```bash
+python scripts/visualize_tokens.py --video path/to/clip.avi
+```
+
+Saves figures in `results/figures/`: where the CLS token attends in each frame
+(any layer, `--layer`), and, once you have written the two TODO functions in
+the script, a PCA of the patch tokens and a similarity map to one query patch.
+
+Read [`docs/model_notes.md`](docs/model_notes.md) before interpreting them. Two
+things to know about the model:
 
 - Leave the attention mode on its default. The model was trained with
   block-causal attention and gives worse features otherwise, without any error.
@@ -128,8 +144,8 @@ If `from_pretrained` complains about a missing package, install it and add it to
 
 ## Data
 
-Datasets and cached features are not in git. Put them on the shared storage and
-set the paths in the configs:
+Datasets and cached features are not in git. Put them on the GPU machine's
+storage and set the paths in the configs:
 
 - `configs/ucf101.yaml` → `root`: the UCF101 folder (videos + `ucfTrainTestlist/`)
 - `configs/ucf101.yaml` → `feature_dir`: where extracted features are written
