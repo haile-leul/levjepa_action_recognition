@@ -88,7 +88,8 @@ frame 15's tokens have seen the whole clip. Consequences:
   ImageNet and SSv2 numbers in the paper are obtained.
 - A *linear probe on the average of all output tokens*, for Kinetics-400.
 
-A linear probe on the CLS alone is not reported. Whether the trained CLS beats
+For action recognition, the paper never reports a linear probe on the CLS
+alone. Whether the trained CLS beats
 pooled patch tokens, and how much an attentive or temporal readout adds, is
 exactly what we want to find out.
 
