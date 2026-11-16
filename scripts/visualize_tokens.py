@@ -10,8 +10,9 @@ For every clip this saves figures in --out (default results/figures/):
     <clip>_similarity.png      similarity of every patch to one query patch (TODO: query_similarity)
 
 The two TODO functions below are yours to write. Until they are implemented the
-script just skips those figures. Use a GPU if you have one; on a laptop CPU one
-clip takes about 10-30 seconds.
+script just skips those figures. results/examples/ shows what you should get on
+UCF101's v_ApplyEyeMakeup_g01_c01.avi. Use a GPU if you have one; on a laptop
+CPU one clip takes about 10-30 seconds.
 """
 
 import argparse
@@ -72,7 +73,8 @@ def query_similarity(patches: torch.Tensor, t: int, h: int, w: int) -> torch.Ten
     """(T, h, w, D) patch tokens -> (T, h, w) cosine similarity to patch (t, h, w).
 
     Pick a patch on the moving person/object and see whether the same thing
-    lights up in the other frames. See Figure 5 of the LeVJEPA paper.
+    lights up in the other frames. See Figure 5 of the LeVJEPA paper. As for
+    the PCA, compare raw tokens with tokens whose per-frame mean is removed.
     """
     raise NotImplementedError
 
