@@ -2,13 +2,13 @@
 
 Only the linear probe is here to start with. New heads go in this file as the
 project moves on, and get registered in HEADS so train_probe.py can build them
-by name from a config:
+by name from a config. The readouts we plan to compare:
 
-    sprint 5  linear      on CLS or mean-pooled patches       (done below)
-    sprint 6  linear      on [CLS, mean] concatenated         (just a bigger in_dim)
-              mlp         one hidden layer
-    sprint 7  attentive   learned query(ies) attending over patch tokens
-              temporal    small 1D conv / attention over the 16 per-frame vectors
+    linear      on CLS or mean-pooled patches       (done below)
+    linear      on [CLS, mean] concatenated         (just a bigger in_dim)
+    mlp         one hidden layer
+    attentive   learned query(ies) attending over patch tokens
+    temporal    small 1D conv / attention over the 16 per-frame vectors
 
 Every head takes a features tensor and returns logits of shape (B, num_classes).
 Keep heads small: the point of the project is comparing readouts, not building

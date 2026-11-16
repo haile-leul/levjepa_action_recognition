@@ -1,4 +1,4 @@
-"""Train a readout head on cached features and log the result (sprint 5 onwards).
+"""Train a readout head on cached features and log the result.
 
     python scripts/train_probe.py --config configs/probes/linear_cls.yaml
     python scripts/train_probe.py --config configs/probes/linear_mean.yaml
@@ -44,13 +44,13 @@ def main():
         head = build_head(cfg["head"], train_set.feature_dim, data_cfg["num_classes"], **cfg.get("head_kwargs", {}))
         head = head.to(args.device)
 
-        # TODO (sprint 5):
+        # TODO:
         #   - DataLoaders for train_set / test_set (shuffle train only)
         #   - optimizer from cfg (AdamW, lr, weight_decay), maybe a cosine schedule
         #   - train for cfg["epochs"] inside `with track_compute(args.device) as compute:`
         #   - evaluate on test_set with accuracy(logits, labels) -> top1, top5
         #   - unless args.no_log, log_result({... see src/utils/metrics.py ...})
-        raise NotImplementedError("probe training: sprint 5")
+        raise NotImplementedError("probe training: to do")
 
 
 if __name__ == "__main__":

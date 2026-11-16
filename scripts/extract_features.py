@@ -1,10 +1,10 @@
-"""Run the frozen backbone once over a dataset split and cache the features (sprint 4).
+"""Run the frozen backbone once over a dataset split and cache the features.
 
     python scripts/extract_features.py --data configs/ucf101.yaml --split train
     python scripts/extract_features.py --data configs/ucf101.yaml --split test
 
 Writes <feature_dir>/<split>.pt in the format described in src/data/features.py.
-Record the total extraction time; it goes in the sprint 4 update.
+Record the total extraction time, we want to see it.
 """
 
 import argparse
@@ -34,7 +34,7 @@ def main():
     data_cfg = load_config(args.data)
     backbone = LeVJEPABackbone.from_config(model_cfg).to(args.device)
 
-    # TODO (sprint 4):
+    # TODO:
     #   1. build the dataset (src/data/ucf101.py) and a DataLoader
     #   2. for each batch: out = backbone(batch["video"])
     #        cls        = out.cls                          (B, 1024)
@@ -44,7 +44,7 @@ def main():
     #   3. torch.save the dict described in src/data/features.py to
     #      Path(data_cfg["feature_dir"]) / f"{args.split}.pt"
     #   4. time the whole thing (src/utils/metrics.track_compute) and print it
-    raise NotImplementedError("feature extraction: sprint 4")
+    raise NotImplementedError("feature extraction: to do")
 
 
 if __name__ == "__main__":

@@ -10,11 +10,10 @@ sees two things: the CLS token and the grid of patch tokens.
 
 The backbone is frozen for the whole project: no gradients, always in eval mode.
 
-The remote model code is loaded with ``trust_remote_code=True``. We only rely on
-it returning a sequence of tokens (a tensor, a tuple, or a ModelOutput with
-``last_hidden_state``). If the checkpoint behaves differently from what is
-described in docs/model_notes.md, ``_unpack_tokens`` and ``_split_tokens`` are
-the only places that need to change.
+The HF model (``trust_remote_code=True``) takes (B, C, T, H, W) and returns
+``last_hidden_state`` of shape (B, 3137, 1024): the CLS token first, then the
+16 x 14 x 14 patch tokens in (t, h, w) order. See docs/model_notes.md for what
+these tokens are and how they were trained.
 """
 
 from __future__ import annotations
@@ -24,7 +23,7 @@ from dataclasses import dataclass
 import torch
 from torch import nn
 
-DEFAULT_MODEL_ID = "galilai-group/levjepa-videomix-large"
+DEFAULT_MODEL_ID = "galilai-group/LeVJEPA-VideoMix-Large"
 
 _DTYPES = {
     "float32": torch.float32,
@@ -173,7 +172,7 @@ def _split_tokens(
     """Split a (B, N, D) token sequence into CLS and a (B, T', H', W', D) grid.
 
     Assumes the CLS token comes first and patch tokens are ordered time-major,
-    i.e. (t, h, w) flattened. Check this in sprint 3 (see docs/model_notes.md).
+    i.e. (t, h, w) flattened, which is what the LeVJEPA model returns.
     """
     if tokens.ndim != 3:
         raise ValueError(f"expected tokens of shape (B, N, D), got {tuple(tokens.shape)}")

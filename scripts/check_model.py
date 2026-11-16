@@ -58,7 +58,7 @@ def main():
 
     t, s = cfg["num_frames"], cfg["image_size"]
     if args.video:
-        clips = [load_clip(v, t, s, cfg["mean"], cfg["std"]) for v in args.video]
+        clips = [load_clip(v, t, s, cfg["mean"], cfg["std"], target_fps=cfg.get("target_fps")) for v in args.video]
         video = torch.stack(clips)
     else:
         video = torch.randn(args.batch_size, t, 3, s, s)

@@ -4,5 +4,6 @@ huggingface_hub
 numpy
 pyyaml
 tqdm
+matplotlib
 av>=12        # video decoding (PyAV, ships its own ffmpeg)
 pytest

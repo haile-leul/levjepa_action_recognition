@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 import torch
 
-from src.data.video import load_clip, preprocess, read_video, sample_frame_indices
+from src.data.video import load_clip, preprocess, read_video, sample_frame_indices, stride_for_fps
 
 
 def test_uniform_sampling_covers_video():
@@ -29,6 +29,13 @@ def test_strided_sampling_falls_back_on_short_video():
     assert len(idx) == 16 and idx.max() <= 19
 
 
+def test_stride_for_fps():
+    assert stride_for_fps(25, 7.5) == 3      # UCF101
+    assert stride_for_fps(12, 7.5) == 2      # SSv2
+    assert stride_for_fps(5, 7.5) == 1
+    assert stride_for_fps(25, None) is None
+
+
 def test_preprocess_shape_and_normalisation():
     frames = torch.full((16, 240, 320, 3), 255, dtype=torch.uint8)
     x = preprocess(frames, 224, mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
@@ -43,8 +50,8 @@ def tiny_video(tmp_path):
     with av.open(str(path), mode="w") as container:
         stream = container.add_stream("mpeg4", rate=25)
         stream.width, stream.height, stream.pix_fmt = 64, 48, "yuv420p"
-        for i in range(30):
-            img = np.full((48, 64, 3), i * 8, dtype=np.uint8)
+        for i in range(60):
+            img = np.full((48, 64, 3), i * 4, dtype=np.uint8)
             for packet in stream.encode(av.VideoFrame.from_ndarray(img, format="rgb24")):
                 container.mux(packet)
         for packet in stream.encode():
@@ -53,12 +60,19 @@ def tiny_video(tmp_path):
 
 
 def test_read_video(tiny_video):
-    frames = read_video(tiny_video)
-    assert frames.shape == (30, 48, 64, 3)
+    frames, fps = read_video(tiny_video)
+    assert frames.shape == (60, 48, 64, 3)
     assert frames.dtype == torch.uint8
+    assert fps == pytest.approx(25)
 
 
 def test_load_clip(tiny_video):
     clip = load_clip(tiny_video, num_frames=16, image_size=32)
     assert clip.shape == (16, 3, 32, 32)
     assert torch.isfinite(clip).all()
+
+
+def test_load_clip_with_display_frames(tiny_video):
+    clip, frames = load_clip(tiny_video, num_frames=16, image_size=32, return_display=True)
+    assert frames.shape == (16, 32, 32, 3)
+    assert frames.min() >= 0 and frames.max() <= 1

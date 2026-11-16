@@ -1,4 +1,4 @@
-"""UCF101 dataset (holiday break task).
+"""UCF101 dataset.
 
 Expected layout of the dataset root (the official download, unpacked):
 
@@ -13,7 +13,8 @@ Expected layout of the dataset root (the official download, unpacked):
                                                                 from the folder name)
 
 We use split 1 only. Each item should be one clip of shape (T, 3, S, S) built
-with src.data.video.load_clip, plus its 0-based label.
+with src.data.video.load_clip (same num_frames, image_size, mean, std and
+target_fps as configs/model.yaml), plus its 0-based label.
 
 Things to think about while writing this:
   - labels in the split files are 1-based, PyTorch wants 0-based
@@ -41,7 +42,7 @@ class UCF101(Dataset):
         image_size: int = 224,
         mean: list[float] = (0.485, 0.456, 0.406),
         std: list[float] = (0.229, 0.224, 0.225),
-        frame_stride: int | None = None,
+        target_fps: float | None = 7.5,
     ):
         if split not in ("train", "test"):
             raise ValueError(f"split must be 'train' or 'test', got {split!r}")
@@ -52,12 +53,12 @@ class UCF101(Dataset):
         self.image_size = image_size
         self.mean = mean
         self.std = std
-        self.frame_stride = frame_stride
+        self.target_fps = target_fps
 
         # TODO: read classInd.txt and the split file, build
         #   self.classes:  list[str], index = 0-based label
         #   self.samples:  list[tuple[str, int]], (relative path, label)
-        raise NotImplementedError("UCF101 loader: holiday break task")
+        raise NotImplementedError("UCF101 loader: to do")
 
     def __len__(self) -> int:
         return len(self.samples)

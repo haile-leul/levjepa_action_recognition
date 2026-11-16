@@ -1,11 +1,9 @@
 name: ucf101
-root: /path/to/UCF101    # set this to the shared copy on the GPU machine
+root: /path/to/UCF101    # set this to your copy on the GPU machine
 fold: 1                  # official split 1 only
 num_classes: 101
 
-# Temporal sampling. null spreads the 16 frames over the whole video;
-# an integer k takes 16 frames k apart from the middle of the video.
-# Pick one before extracting features and don't change it afterwards.
-frame_stride: null
+# Frame sampling (num_frames, target_fps) comes from configs/model.yaml so
+# that every dataset is fed to the model the same way.
 
 feature_dir: features/ucf101
