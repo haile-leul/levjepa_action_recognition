@@ -11,8 +11,8 @@ For every clip this saves figures in --out (default results/figures/):
 
 The two TODO functions below are yours to write. Until they are implemented the
 script just skips those figures. results/examples/ shows what you should get on
-UCF101's v_ApplyEyeMakeup_g01_c01.avi. Use a GPU if you have one; on a laptop
-CPU one clip takes about 10-30 seconds.
+two UCF101 clips (scripts/download_example_clips.py fetches them). Use a GPU if
+you have one; on a laptop CPU one clip takes about 10-30 seconds.
 """
 
 import argparse

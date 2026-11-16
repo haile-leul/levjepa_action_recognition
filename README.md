@@ -48,10 +48,11 @@ docs/
 results/
     results.csv             every training run, one row each
     figures/                figures you want us to see
-    examples/               expected visualisation results on one UCF101 clip
+    examples/               expected visualisation results on two UCF101 clips
 scripts/
     check_env.py            check packages and GPU                       (works now)
     check_model.py          load the model and inspect its outputs       (works now)
+    download_example_clips.py  the clips used in results/examples/       (works now)
     visualize_tokens.py     CLS attention, patch PCA, patch similarity   (partly to do)
     extract_features.py     run the backbone once, cache features        (to do)
     train_probe.py          train a head on cached features, log result  (to do)
@@ -132,8 +133,10 @@ python scripts/visualize_tokens.py --video path/to/clip.avi
 Saves figures in `results/figures/`: where the CLS token attends in each frame
 (any layer, `--layer`), and, once you have written the two TODO functions in
 the script, a PCA of the patch tokens and a similarity map to one query patch.
-[`results/examples/`](results/examples/) shows what to expect on
-`v_ApplyEyeMakeup_g01_c01.avi`.
+[`results/examples/`](results/examples/) shows what to expect on two UCF101
+clips, `UCF-101/ApplyEyeMakeup/v_ApplyEyeMakeup_g01_c01.avi` and
+`UCF-101/BabyCrawling/v_BabyCrawling_g19_c02.avi`. If you don't have UCF101
+yet, `python scripts/download_example_clips.py` fetches just these two.
 
 Read [`docs/model_notes.md`](docs/model_notes.md) before interpreting them. Two
 things to know about the model:
